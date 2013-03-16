@@ -1,0 +1,51 @@
+#+TITLE: ren-rss2gmail
+#+OPTIONS: toc:nil num:t todo:t pri:nil tags:nil ^:nil TeX:nil
+#+AUTHOR: 任文山 (Ren Wenshan) <renws1990@gmail.com>
+
+* 简介
+  抓取RSS feed，然后将结果发送到指定的电子邮箱。
+
+  跟 *rss2email* 的功能一样，但 *rss2email* 在我电脑上一直运行不成功，而且没有错
+  误提示，于是我重新写了一个简化版的，命名为 *ren-rss2gmail* ，因为我写的这个版本
+  需要注册一个 *gmail* 帐号，进行邮件的发送，当然，收取人可以为任意电子邮箱。
+
+* 安装、配置和运行
+
+** 安装依赖
+   - Python 2.7，目前只在这个版本下测试过
+
+   - Python的feedparser库，用于对feed进行解析，在Debian下用pip安装:
+
+     =sudo pip install feedparser=
+
+** 下载ren-rss2gmail
+   https://github.com/RenWenshan/ren-rss2gmail
+
+** 配置
+   - 将 /.ren-rss2gmail/ 拷贝到家目录，这个文件里面是JSON格式的配置信息。
+   - 修改 "~/.ren-rss2gmail"，把里面的 /username/ ， /passowrd/ ，/receivers/ 替
+     换成恰当的值。
+   - 加入一些feed，/feeds/ 的格式为 "feed_url": {"name": "feed_name",
+     "last_update": {}}，新加入的feed， /last_update/ 的值设为 "{}" 即可。
+
+** 定时运行
+
+*** GNU/Linux
+    GNU/Linux可以用 /crontab/ 定时运行 /ren-rss2gmail/ ，在 "/etc/crontab" 里加入:
+
+    =mm hh   * * *   username python /path/ren-rss2gmail/ren-rss2gmail.py=
+
+    *注意*: 把上面的 /mm/ 替换成 /分/ ， /hh/ 替换成 /时/ ， /username/ 替换成你
+    的 /gmail用户名/ ， /path/ 替换成程序的 /路径/ 。
+
+*** Windows
+    Windows下有 /计划任务/ ，也可以定时运行某个程序，具体用法请自行查询。
+
+*** Mac
+    Mac下也有 /crontab/ ，请自行查询用法
+
+* 卸载
+  - 删除 /ren-rss2gmail/ 的目录
+  - 删除配置文件 "~/.ren-rss2gmail"
+  - 删除记录文件 "~/ren-rss2gmail.log"
+  - 在 /crontab/ 里删除相关的行

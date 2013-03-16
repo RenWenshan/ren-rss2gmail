@@ -1,0 +1,56 @@
+#+TITLE: ren-rss2gmail
+#+OPTIONS: toc:nil num:t todo:t pri:nil tags:nil ^:nil TeX:nil
+#+AUTHOR: 任文山 (Ren Wenshan) <renws1990@gmail.com>
+
+* Introduction
+  It parses RSS feeds and sends the result to specified email addresses.
+
+  It does the very similar thing that *rss2email* does, but *rss2email* never
+  worked for me, what was worse, it even did not show me any error messages. So
+  I wrote this simplified version and named it *ren-rss2gmail*, since you need
+  to register an gmail account for sending emails (surely you can send feeds to
+  any receivers).
+
+* Install, Configure and Run
+
+** Install Dependencies
+   - Python 2.7, the program is only tested on this version
+   - feedparser, it is a Python library which is used for parsing feeds. You can
+     install it on Debian using pip:
+
+     =sudo pip install feedparser=
+
+** Download ren-rss2gmail
+   https://github.com/RenWenshan/ren-rss2gmail
+
+** Configuration
+   - copy file /.ren-rss2gmail/ to your home directory, it is a configuration
+     file in JSON format.
+   - modify "~/.ren-rss2gmail", replace the values of /username/ , /password/ ,
+     /receivers/ .
+   - add some feeds, the format of /feeds/ is: "feed_url": {"name": "feed_name",
+     "last_update": {}}. Leave the value of /last-update/ "{}" for newly added
+     feeds.
+
+** Scheduled Run
+
+*** GNU/Linux
+    You can add the following line to "/etc/crontab/" on GNU/Linux
+    so *ren-rss2gmail* will run automatically at a specified time interval:
+
+    =mm hh   * * *   username python /path/ren-rss2gmail/ren-rss2gmail.py=
+
+    *Note*: please replace /mm/ with /second/ , /hh/ with /hour/ , /username/
+    with your /gmail_username/ , /path/ with the path of *ren-rss2gmail*
+
+*** Windows
+    You can use *Task Scheduler* on Windows.
+
+*** Mac
+    *cron* is also available on Mac
+
+* Uninstall
+  - remove the directory of /ren-rss2gmail/
+  - remove configuration file "~/.ren-rss2gmail"
+  - remove log file "~/ren-rss2gmail.log"
+  - remove the line added to /crontab/

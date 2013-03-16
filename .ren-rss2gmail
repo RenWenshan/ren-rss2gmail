@@ -1,0 +1,11 @@
+{
+    "username": "xxx",
+    "password": "xxxxx",
+    "feeds": {
+        "http://wenshanren.org/?feed=rss2": {
+            "name": "Wenshan's blog",
+            "last_update": {}
+        }
+    },
+    "receivers": ["renws1990@gmail.com"]
+}
