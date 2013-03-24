@@ -32,7 +32,7 @@ import logging
 import time
 
 # debugging flag
-DEBUG = True
+DEBUG = False
 
 
 # logging level
@@ -108,7 +108,7 @@ def compose_email(gmail_username, to, subject, content):
     return msg
 
 
-def parse_feed(title, url, last_parse_time):
+def parse_feed(url, last_parse_time):
     # retrieve feed data
     data = feedparser.parse(url)
     logger.info("data parsed")
@@ -137,12 +137,19 @@ def parse_feed(title, url, last_parse_time):
         last_parse_time_parsed = time.struct_time((0, 0, 0, 0, 0, 0, 0, 0, 0))
 
     # do not parse if no new items
-    if data.entries[0].published_parsed <= last_parse_time_parsed:
+    if data.entries[0].updated_parsed:
+        # some feeds use `updated_parsed' to indicate the last updated time
+        last_update_key = "updated_parsed"
+    else:
+        # while some other use `published_parsed'
+        last_update_key = "published_parsed"
+
+    if data.entries[0][last_update_key] <= last_parse_time_parsed:
         logger.info(blog_title + ": no new entries")
         return res
 
     for blog in data.entries:
-        if blog.published_parsed <= last_parse_time_parsed:
+        if blog[last_update_key] <= last_parse_time_parsed:
             logger.info(blog_title + ": finished")
             break
 
@@ -158,7 +165,7 @@ def parse_feed(title, url, last_parse_time):
         res[1].insert(0, [
             blog.link,      # 0 link
             blog.title,     # 1 title
-            blog.published_parsed,  # 2 published date
+            blog[last_update_key],  # 2 published date
             content                 # 3 content
         ])
 
@@ -224,7 +231,7 @@ def main():
     logger.info("start parsing feeds")
     feeds = []
     for rss in rss_list:
-        feeds.append(parse_feed(rss[0], rss[1], rss[2]))
+        feeds.append(parse_feed(rss[1], rss[2]))
 
     # send feeds to receivers
     logger.info("start sending Emails")
